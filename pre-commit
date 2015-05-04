@@ -22,7 +22,7 @@ keywords_for_grep=$(printf "|%s" "${keywords[@]}")
 keywords_for_grep=${keywords_for_grep:1}
 
 # Directories and files to be excluded during search.
-exclude_dir_and_ext='features|contrib|devel|libraries|\.info$|\.png$|\.gif$|\.jpg$|.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
+exclude_dir_and_ext='features|contrib|devel|libraries|\.info$|\.png$|\.gif$|\.jpg$|\.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
 
 # Flag counter
 synatx_error_found=0
@@ -30,7 +30,7 @@ debugging_function_found=0
 
 # Check for PHP syntax
 # List php files added to commit
-php_files_changed=`git diff-index --name-only HEAD -- | egrep '\.php$|\.inc$|\.module'`
+php_files_changed=`git diff-index --cached --name-only HEAD -- | egrep '\.php$|\.inc$|\.module$'`
 if [ -n "$php_files_changed" ]
 then
   for FILE in $php_files_changed; do
