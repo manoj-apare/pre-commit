@@ -42,3 +42,8 @@ For better performance of the script, we have excluded the checking of files
 with following extensions: 'info, png, gif, jpg, ico, patch, htaccess, sh, ttf,
 woff, eot, svg'. Also excluded files residing in the following directories:
 'features, contrib, devel, libraries'.
+
+### Merge conflict marker check
+
+Merge conflict marker check is been performed to all files staged to commit
+using egrep pattern "(<<<<|====|>>>>)+.*(\n)?".
