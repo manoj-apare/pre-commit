@@ -27,6 +27,7 @@ exclude_dir_and_ext='features|contrib|devel|libraries|\.info$|\.png$|\.gif$|\.jp
 # Flag counter
 synatx_error_found=0
 debugging_function_found=0
+merge_conflict=0
 
 # Check for PHP syntax
 # List php files added to commit
@@ -51,7 +52,7 @@ then
 fi
 
 # Check for debugging functions
-# List all files added to commit
+# List all files added to commit excluding the exceptions
 files_changed=`git diff-index --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext`
 if [ -n "$files_changed" ]
 then
@@ -78,8 +79,31 @@ then
   done
 fi
 
+# Check for merge conflict markers
+# List all files added to commit
+files_changed=`git diff-index --cached --name-only HEAD --`
+if [ -n "$files_changed" ]
+then
+  for FILE in $files_changed ; do
+    # Find debugging function exists in file diff one by one.
+    pattern="(<<<<|====|>>>>)+.*(\n)?"
+    result_for_file=`egrep -in "$pattern" $FILE`
+    if [ ! -z "$result_for_file" ]
+    then
+      if [ $merge_conflict -eq 0 ]
+      then
+        echo "${red}"
+        echo "# Merge confict marker(s) found in:"
+        echo "-----------------------------------${reset}"
+      fi
+      merge_conflict=1
+      echo $FILE
+    fi
+  done
+fi
+
 # Decision maker
-errors_found=$((synatx_error_found+debugging_function_found))
+errors_found=$((synatx_error_found+debugging_function_found+merge_conflict))
 if [ $errors_found -eq 0 ]
 then
   echo "${green}"
