@@ -6,7 +6,8 @@ Git pre-commit hook script is been built specifically for Drupal git
 repository.
 
 ## Prerequisite
-PHP Code Sniffer (phpcs).
+1. PHP Code Sniffer (phpcs).
+2. Coder module - `Drupal` code sniffer standard.
 
 ## Installation
 
