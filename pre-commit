@@ -22,7 +22,7 @@ keywords_for_grep=$(printf "|%s" "${keywords[@]}")
 keywords_for_grep=${keywords_for_grep:1}
 
 # Directories and files to be excluded during search.
-exclude_dir_and_ext='features|contrib|devel|libraries|\.info$|\.png$|\.gif$|\.jpg$|\.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
+exclude_dir_and_ext='\/features\/|\/contrib\/|\/devel\/|\/libraries\/|\.info$|\.png$|\.gif$|\.jpg$|\.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
 
 # Flag counter
 synatx_error_found=0
@@ -32,7 +32,7 @@ coding_standard_error=0
 
 # Check for PHP syntax
 # List php files added to commit
-php_files_changed=`git diff-index --cached --name-only HEAD -- | egrep '\.php$|\.inc$|\.module$'`
+php_files_changed=`git diff-index --diff-filter=ACMRT --cached --name-only HEAD -- | egrep '\.php$|\.inc$|\.module|\.theme$'`
 if [ -n "$php_files_changed" ]
 then
   for FILE in $php_files_changed; do
@@ -54,7 +54,7 @@ fi
 
 # Check for debugging functions
 # List all files added to commit excluding the exceptions
-files_changed=`git diff-index --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext`
+files_changed=`git diff-index --diff-filter=ACMRT --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext`
 if [ -n "$files_changed" ]
 then
   for FILE in $files_changed ; do
@@ -82,7 +82,7 @@ fi
 
 # Check for Drupal coding standards
 # List php files added to commit
-php_files_changed=`git diff-index --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext | egrep '\.php$|\.module$|\.inc$|\.install$|\.test$|\.profile$|\.theme$|\.js$|\.css$|\.info$|\.txt$'`
+php_files_changed=`git diff-index --diff-filter=ACMRT --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext | egrep '\.php$|\.module$|\.inc$|\.install$|\.test$|\.profile$|\.theme$|\.js$|\.css$|\.info$|\.txt$'`
 if [ -n "$php_files_changed" ]
 then
   phpcs_result=`phpcs --standard=Drupal --report=csv $php_files_changed`
@@ -98,7 +98,7 @@ fi
 
 # Check for merge conflict markers
 # List all files added to commit
-files_changed=`git diff-index --cached --name-only HEAD --`
+files_changed=`git diff-index --diff-filter=ACMRT --cached --name-only HEAD --`
 if [ -n "$files_changed" ]
 then
   for FILE in $files_changed; do
@@ -118,7 +118,7 @@ then
     fi
   done
 fi
-
+exit 1
 # Decision maker
 errors_found=$((synatx_error_found+debugging_function_found+merge_conflict+coding_standard_error))
 if [ $errors_found -eq 0 ]
