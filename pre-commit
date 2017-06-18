@@ -22,7 +22,7 @@ keywords_for_grep=$(printf "|%s" "${keywords[@]}")
 keywords_for_grep=${keywords_for_grep:1}
 
 # Directories and files to be excluded during search.
-exclude_dir_and_ext='\/features\/|\/contrib\/|\/devel\/|\/libraries\/|\.info$|\.png$|\.gif$|\.jpg$|\.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
+exclude_dir_and_ext='\/features\/|\/contrib\/|\/devel\/|\/libraries\/|\/vendor\/|\.info$|\.png$|\.gif$|\.jpg$|\.ico$|\.patch$|\.htaccess$|\.sh$|\.ttf$|\.woff$|\.eot$|\.svg$'
 
 # Flag counter
 synatx_error_found=0
