@@ -28,6 +28,7 @@ exclude_dir_and_ext='features|contrib|devel|libraries|\.info$|\.png$|\.gif$|\.jp
 synatx_error_found=0
 debugging_function_found=0
 merge_conflict=0
+coding_standard_error=0
 
 # Check for PHP syntax
 # List php files added to commit
@@ -79,12 +80,28 @@ then
   done
 fi
 
+# Check for Drupal coding standards
+# List php files added to commit
+php_files_changed=`git diff-index --cached --name-only HEAD -- | egrep -v $exclude_dir_and_ext | egrep '\.php$|\.module$|\.inc$|\.install$|\.test$|\.profile$|\.theme$|\.js$|\.css$|\.info$|\.txt$'`
+if [ -n "$php_files_changed" ]
+then
+  phpcs_result=`phpcs --standard=Drupal --report=csv $php_files_changed`
+  if [ "$phpcs_result" != "File,Line,Column,Type,Message,Source,Severity,Fixable" ]
+  then
+    echo "${red}"
+    echo "# Coding standard issue(s):"
+    echo "---------------------------${reset}"
+    phpcs --standard=Drupal $php_files_changed
+    coding_standard_error=1
+  fi
+fi
+
 # Check for merge conflict markers
 # List all files added to commit
 files_changed=`git diff-index --cached --name-only HEAD --`
 if [ -n "$files_changed" ]
 then
-  for FILE in $files_changed ; do
+  for FILE in $files_changed; do
     # Find debugging function exists in file diff one by one.
     pattern="(<<<<|====|>>>>)+.*(\n)?"
     result_for_file=`egrep -in "$pattern" $FILE`
@@ -103,7 +120,7 @@ then
 fi
 
 # Decision maker
-errors_found=$((synatx_error_found+debugging_function_found+merge_conflict))
+errors_found=$((synatx_error_found+debugging_function_found+merge_conflict+coding_standard_error))
 if [ $errors_found -eq 0 ]
 then
   echo "${green}"
