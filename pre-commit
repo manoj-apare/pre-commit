@@ -124,7 +124,7 @@ errors_found=$((synatx_error_found+debugging_function_found+merge_conflict+codin
 if [ $errors_found -eq 0 ]
 then
   echo "${green}"
-  echo "Clean code :), your code had now been committed!"
+  echo "Clean code :), your code now been committed!"
   echo "${reset}"
 else
   echo "${red}"
